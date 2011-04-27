@@ -106,10 +106,10 @@ class PHP_CodeCoverage_Report_Crap4j
                         $methodNode->appendChild($document->createElement('methodName', $methodName));
 						$methodNode->appendChild($document->createElement('methodSignature', htmlspecialchars($method['signature'])));
                         $methodNode->appendChild($document->createElement('fullMethod', htmlspecialchars($method['signature'])));
-                        $methodNode->appendChild($document->createElement('crap', $crap));
+                        $methodNode->appendChild($document->createElement('crap', $this->roundValue($crap)));
                         $methodNode->appendChild($document->createElement('complexity', $method['ccn']));
-                        $methodNode->appendChild($document->createElement('coverage', $coveragePercent));
-                        $methodNode->appendChild($document->createElement('crapLoad', $crapLoad));
+                        $methodNode->appendChild($document->createElement('coverage', $this->roundValue($coveragePercent)));
+                        $methodNode->appendChild($document->createElement('crapLoad', round($crapLoad)));
 
                         $methodsNode->appendChild($methodNode);
 
@@ -127,9 +127,9 @@ class PHP_CodeCoverage_Report_Crap4j
 
 		$stats->appendChild($document->createElement('methodCount', $fullMethodCount));
 		$stats->appendChild($document->createElement('crapMethodCount', $fullCrapMethodCount));
-        $stats->appendChild($document->createElement('crapLoad', $fullCrapLoad));
+        $stats->appendChild($document->createElement('crapLoad', round($fullCrapLoad)));
 		$stats->appendChild($document->createElement('totalCrap', $fullCrap));
-		$stats->appendChild($document->createElement('crapMethodPercent', 100 * $fullCrapMethodCount / $fullMethodCount));
+		$stats->appendChild($document->createElement('crapMethodPercent', $this->roundValue(100 * $fullCrapMethodCount / $fullMethodCount)));
 
         $root->appendChild($stats);
 		$root->appendChild($methodsNode);
@@ -196,4 +196,9 @@ class PHP_CodeCoverage_Report_Crap4j
 		}
     	return $crapLoad;
 	}
+
+    private function roundValue($value)
+    {
+        return round($value, 2);
+    }
 }
