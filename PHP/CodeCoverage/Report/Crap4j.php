@@ -4,10 +4,11 @@
  * PHP_CodeCoverage_Report_Crap4j
  *
  * @author oker <zsolt@takacs.cc>
+ * @author pepov <pepov@ustream.tv>
  */
 class PHP_CodeCoverage_Report_Crap4j
 {
-	private $treshHold = 30;
+    private $treshHold = 30;
 
     /**
      * @param  PHP_CodeCoverage $coverage
@@ -27,15 +28,15 @@ class PHP_CodeCoverage_Report_Crap4j
         $root->appendChild($project);
         $root->appendChild($document->createElement('timestamp', date('Y-m-d H:i:s', (int)$_SERVER['REQUEST_TIME'])));
 
-		$stats = $document->createElement('stats');
+        $stats = $document->createElement('stats');
         $methodsNode = $document->createElement('methods');
 
         $files = $coverage->getSummary();
 
-		$fullMethodCount = 0;
-		$fullCrapMethodCount = 0;
-		$fullCrapLoad = 0;
-		$fullCrap = 0;
+        $fullMethodCount = 0;
+        $fullCrapMethodCount = 0;
+        $fullCrapLoad = 0;
+        $fullCrap = 0;
 
         foreach ($files as $filename => $data) {
 
@@ -77,34 +78,34 @@ class PHP_CodeCoverage_Report_Crap4j
 
                     foreach ($_class['methods'] as $methodName => $method) {
 
-						$methodCount = 0;
-						$methodLines = 0;
-						$methodLinesCovered = 0;
-						$this->methodsDetails($method, $ignoredLines, $files, $filename, $classStatistics, $lines, $methodCount, $methodLines, $methodLinesCovered);
+                        $methodCount = 0;
+                        $methodLines = 0;
+                        $methodLinesCovered = 0;
+                        $this->methodsDetails($method, $ignoredLines, $files, $filename, $classStatistics, $lines, $methodCount, $methodLines, $methodLinesCovered);
 
-						$fullMethodCount++;
+                        $fullMethodCount++;
 
                         $coveragePercent = PHP_CodeCoverage_Util::percent(
                             $methodLinesCovered,
                             $methodLines
                         );
                         $crap = PHP_CodeCoverage_Util::crap($method['ccn'], $coveragePercent);
-						$fullCrap += $crap;
+                        $fullCrap += $crap;
 
-						if ($crap >= $this->treshHold) {
-							$fullCrapMethodCount++;
-						}
+                        if ($crap >= $this->treshHold) {
+                            $fullCrapMethodCount++;
+                        }
 
-						$crapLoad = $this->getCrapLoad($crap, $method['ccn'], $coveragePercent);
+                        $crapLoad = $this->getCrapLoad($crap, $method['ccn'], $coveragePercent);
 
-						$fullCrapLoad += $crapLoad;
+                        $fullCrapLoad += $crapLoad;
 
                         $methodNode = $document->createElement('method');
 
                         $methodNode->appendChild($document->createElement('package', ''));
                         $methodNode->appendChild($document->createElement('className', $className));
                         $methodNode->appendChild($document->createElement('methodName', $methodName));
-						$methodNode->appendChild($document->createElement('methodSignature', htmlspecialchars($method['signature'])));
+                        $methodNode->appendChild($document->createElement('methodSignature', htmlspecialchars($method['signature'])));
                         $methodNode->appendChild($document->createElement('fullMethod', htmlspecialchars($method['signature'])));
                         $methodNode->appendChild($document->createElement('crap', $this->roundValue($crap)));
                         $methodNode->appendChild($document->createElement('complexity', $method['ccn']));
@@ -125,14 +126,14 @@ class PHP_CodeCoverage_Report_Crap4j
 
         $stats->appendChild($document->createElement('name', 'Method Crap Stats'));
 
-		$stats->appendChild($document->createElement('methodCount', $fullMethodCount));
-		$stats->appendChild($document->createElement('crapMethodCount', $fullCrapMethodCount));
+        $stats->appendChild($document->createElement('methodCount', $fullMethodCount));
+        $stats->appendChild($document->createElement('crapMethodCount', $fullCrapMethodCount));
         $stats->appendChild($document->createElement('crapLoad', round($fullCrapLoad)));
-		$stats->appendChild($document->createElement('totalCrap', $fullCrap));
-		$stats->appendChild($document->createElement('crapMethodPercent', $this->roundValue(100 * $fullCrapMethodCount / $fullMethodCount)));
+        $stats->appendChild($document->createElement('totalCrap', $fullCrap));
+        $stats->appendChild($document->createElement('crapMethodPercent', $this->roundValue(100 * $fullCrapMethodCount / $fullMethodCount)));
 
         $root->appendChild($stats);
-		$root->appendChild($methodsNode);
+        $root->appendChild($methodsNode);
 
         if ($target !== NULL) {
             if (!is_dir(dirname($target))) {
@@ -145,57 +146,57 @@ class PHP_CodeCoverage_Report_Crap4j
         }
     }
 
-	private function methodsDetails($method, $ignoredLines, $files, $filename, $classStatistics, $lines, &$methodCount, &$methodLines, &$methodLinesCovered)
-	{
-		for ($i = $method['startLine'];
-			$i <= $method['endLine'];
-			$i++) {
-			if (isset($ignoredLines[$i])) {
-				continue;
-			}
+    private function methodsDetails($method, $ignoredLines, $files, $filename, $classStatistics, $lines, &$methodCount, &$methodLines, &$methodLinesCovered)
+    {
+        for ($i = $method['startLine'];
+            $i <= $method['endLine'];
+            $i++) {
+            if (isset($ignoredLines[$i])) {
+                continue;
+            }
 
-			$add = TRUE;
-			$count = 0;
+            $add = TRUE;
+            $count = 0;
 
-			if (isset($files[$filename][$i])) {
-				if ($files[$filename][$i] != -2) {
-					$classStatistics['statements']++;
-					$methodLines++;
-				}
+            if (isset($files[$filename][$i])) {
+                if ($files[$filename][$i] != -2) {
+                    $classStatistics['statements']++;
+                    $methodLines++;
+                }
 
-				if (is_array($files[$filename][$i])) {
-					$classStatistics['coveredStatements']++;
-					$methodLinesCovered++;
-					$count = count($files[$filename][$i]);
-				}
+                if (is_array($files[$filename][$i])) {
+                    $classStatistics['coveredStatements']++;
+                    $methodLinesCovered++;
+                    $count = count($files[$filename][$i]);
+                }
 
-				else if ($files[$filename][$i] == -2) {
-					$add = FALSE;
-				}
-			} else {
-				$add = FALSE;
-			}
+                else if ($files[$filename][$i] == -2) {
+                    $add = FALSE;
+                }
+            } else {
+                $add = FALSE;
+            }
 
-			$methodCount = max($methodCount, $count);
+            $methodCount = max($methodCount, $count);
 
-			if ($add) {
-				$lines[$i] = array(
-					'count' => $count,
-					'type' => 'stmt'
-				);
-			}
-		}
-	}
+            if ($add) {
+                $lines[$i] = array(
+                    'count' => $count,
+                    'type' => 'stmt'
+                );
+            }
+        }
+    }
 
-	public function getCrapLoad($crapValue, $cyclomaticComplexity, $coveragePercent)
-	{
-    	$crapLoad = 0;
-    	if ($crapValue > $this->treshHold) {
-      		$crapLoad += $cyclomaticComplexity * (1.0 - $coveragePercent / 100);
-      		$crapLoad += $cyclomaticComplexity / $this->treshHold;
-		}
-    	return $crapLoad;
-	}
+    public function getCrapLoad($crapValue, $cyclomaticComplexity, $coveragePercent)
+    {
+        $crapLoad = 0;
+        if ($crapValue > $this->treshHold) {
+            $crapLoad += $cyclomaticComplexity * (1.0 - $coveragePercent / 100);
+            $crapLoad += $cyclomaticComplexity / $this->treshHold;
+        }
+        return $crapLoad;
+    }
 
     private function roundValue($value)
     {
