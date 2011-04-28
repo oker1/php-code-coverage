@@ -4,7 +4,7 @@
  * PHP_CodeCoverage_Report_Crap4j
  *
  * @author oker <zsolt@takacs.cc>
- * @author pepov <pepov@ustream.tv>
+ * @author pepov <peterwilcsinszky@gmail.com>
  */
 class PHP_CodeCoverage_Report_Crap4j
 {
@@ -47,7 +47,6 @@ class PHP_CodeCoverage_Report_Crap4j
 
                 $tokens        = PHP_Token_Stream_CachingFactory::get($filename);
                 $classesInFile = $tokens->getClasses();
-                $linesOfCode   = $tokens->getLinesOfCode();
 
                 $ignoredLines = PHP_CodeCoverage_Util::getLinesToBeIgnored(
                   $filename
