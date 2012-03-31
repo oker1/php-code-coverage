@@ -351,6 +351,9 @@ class PHP_CodeCoverage
 
             foreach ($this->data as $test => $coverage) {
                 foreach ($coverage['filtered'] as $file => $lines) {
+                    if (strncmp($file, 'phar://', 7) === 0) {
+                        continue;
+                    }
                     foreach ($lines as $line => $flag) {
                         if ($flag == 1) {
                             if (!isset($this->summary[$file][$line][0])) {
@@ -371,6 +374,9 @@ class PHP_CodeCoverage
                 }
 
                 foreach ($coverage['raw'] as $file => $lines) {
+                    if (strncmp($file, 'phar://', 7) === 0) {
+                        continue;
+                    }
                     foreach ($lines as $line => $flag) {
                         if ($flag != 1 &&
                             !isset($this->summary[$file][$line][0])) {
