@@ -17,9 +17,9 @@
   <email>sb@sebastian-bergmann.de</email>
   <active>yes</active>
  </lead>
- <date>2011-02-12</date>
+ <date>2012-07-14</date>
  <version>
-  <release>1.0.4</release>
+  <release>1.0.6</release>
   <api>1.0.3</api>
  </version>
  <stability>
@@ -82,6 +82,9 @@
        </dir>
       </dir>
       <file baseinstalldir="/" name="Clover.php" role="php">
+       <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+      <file baseinstalldir="/" name="Crap4j.php" role="php">
        <tasks:replace from="@package_version@" to="version" type="package-info" />
       </file>
       <file baseinstalldir="/" name="HTML.php" role="php">
